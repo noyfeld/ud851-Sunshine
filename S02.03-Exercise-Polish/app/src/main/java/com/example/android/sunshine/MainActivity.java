@@ -21,6 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.android.sunshine.data.SunshinePreferences;
@@ -28,12 +30,15 @@ import com.example.android.sunshine.utilities.NetworkUtils;
 import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
 
 import java.net.URL;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextView mWeatherTextView;
 
     // TODO (6) Add a TextView variable for the error message display
+    private TextView mErrorMessageTextView;
+    private ProgressBar mLoadingIndicatorProgressBar;
 
     // TODO (16) Add a ProgressBar variable to show and hide the progress bar
 
@@ -47,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
          * do things like set the text of the TextView.
          */
         mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
+        mErrorMessageTextView=(TextView)findViewById(R.id.tvErrorMmessage);
+        mLoadingIndicatorProgressBar=(ProgressBar)findViewById(R.id.pbLoadingIndicator);
 
         // TODO (7) Find the TextView for the error message using findViewById
 
@@ -68,11 +75,33 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO (8) Create a method called showWeatherDataView that will hide the error message and show the weather data
 
+    private void showWeatherDataView(){
+        mErrorMessageTextView.setVisibility(View.INVISIBLE);
+        mWeatherTextView.setVisibility(View.VISIBLE);
+    }
+    private void showErrorMessage(){
+        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageTextView.setVisibility(View.VISIBLE);
+    }
+    private void refreshData(){
+        mWeatherTextView.setText("");
+        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mErrorMessageTextView.setVisibility(View.INVISIBLE);
+        loadWeatherData();
+    }
+
     // TODO (9) Create a method called showErrorMessage that will hide the weather data and show the error message
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         // TODO (18) Within your AsyncTask, override the method onPreExecute and show the loading indicator
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mLoadingIndicatorProgressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String[] doInBackground(String... params) {
@@ -92,7 +121,10 @@ public class MainActivity extends AppCompatActivity {
                 String[] simpleJsonWeatherData = OpenWeatherJsonUtils
                         .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
 
-                return simpleJsonWeatherData;
+                Random r = new Random();
+                int randomInt = r.nextInt(2);
+
+                return randomInt==0 ? simpleJsonWeatherData : null;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] weatherData) {
             // TODO (19) As soon as the data is finished loading, hide the loading indicator
+            mLoadingIndicatorProgressBar.setVisibility(View.INVISIBLE);
 
             if (weatherData != null) {
                 // TODO (11) If the weather data was not null, make sure the data view is visible
@@ -114,6 +147,9 @@ public class MainActivity extends AppCompatActivity {
                 for (String weatherString : weatherData) {
                     mWeatherTextView.append((weatherString) + "\n\n\n");
                 }
+                showWeatherDataView();
+            }else {
+                showErrorMessage();
             }
             // TODO (10) If the weather data was null, show the error message
 
@@ -135,8 +171,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-            mWeatherTextView.setText("");
-            loadWeatherData();
+            refreshData();
             return true;
         }
 
