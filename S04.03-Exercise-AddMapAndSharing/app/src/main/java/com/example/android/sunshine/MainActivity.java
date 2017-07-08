@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -219,10 +221,23 @@ public class MainActivity extends AppCompatActivity implements ForecastAdapterOn
             mForecastAdapter.setWeatherData(null);
             loadWeatherData();
             return true;
+        }else if (id==R.id.action_show_map){
+            showLocationOnMap();
+            return true;
         }
+
 
         // TODO (2) Launch the map when the map menu item is clicked
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void showLocationOnMap(){
+        Uri mapUri = Uri.parse("geo:0,0?q=Kyivs'ka oblast, Ukraine");
+        Log.d("mymy",mapUri.toString());
+        Intent in = new Intent(Intent.ACTION_VIEW,mapUri);
+        if (in.resolveActivity(getPackageManager())!=null){
+            startActivity(in);
+        }
     }
 }
