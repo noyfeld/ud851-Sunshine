@@ -40,11 +40,11 @@ public class DetailActivity extends AppCompatActivity {
      * @return The Intent to use to start our share.
      */
     private Intent createShareForecastIntent() {
-        Intent shareIntent = ShareCompat.IntentBuilder.from(this)
+        Intent shareIntentChooser = ShareCompat.IntentBuilder.from(this)
                 .setType("text/plain")
                 .setText(mForecast + FORECAST_SHARE_HASHTAG)
-                .getIntent();
-        return shareIntent;
+                .setChooserTitle("share witH").createChooserIntent();
+        return shareIntentChooser;
     }
 
     @Override
