@@ -54,10 +54,42 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int FORECAST_LOADER_ID = 0;
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("mymy","MainActivity.onStart()"+MainActivity.this.hashCode());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("mymy","MainActivity.onResume()"+MainActivity.this.hashCode());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("mymy","MainActivity.onStop()"+MainActivity.this.hashCode());
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("mymy","MainActivity.onRestart()"+MainActivity.this.hashCode());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("mymy","MainActivity.onDestroy()"+MainActivity.this.hashCode());
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
+        Log.d("mymy","MainActivity.onCreate()"+MainActivity.this.hashCode());
 
         /*
          * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
@@ -343,6 +375,11 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.action_map) {
             openLocationInMap();
+            return true;
+        }
+
+        if (id == R.id.action_settings){
+            startActivity(new Intent(this,SettingsActivity.class));
             return true;
         }
 
