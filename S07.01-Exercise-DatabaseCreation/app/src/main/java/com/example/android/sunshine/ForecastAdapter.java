@@ -54,6 +54,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
         mClickHandler = clickHandler;
     }
 
+
     /**
      * Cache of the children views for a forecast list item.
      */
